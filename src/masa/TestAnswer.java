@@ -1,5 +1,3 @@
-package masa;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,7 +106,24 @@ public class TestAnswer {
                             best_ranking ASC;
                         """;
 
+        // Try-with-resources block to ensure resources are closed properly
+            try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+                     PreparedStatement preparedStatement = connection.prepareStatement(query);
+                     ResultSet resultSet = preparedStatement.executeQuery()) {
 
+        // Process the result set
+            while (resultSet.next()) {
+            	String collegeName = resultSet.getString("college_name");
+                int bestRanking = resultSet.getInt("best_ranking");
+                int numberOfStudents = resultSet.getInt("number_of_students");
+
+       // Print the results
+            System.out.printf("College: %s, Best Ranking: %d, Number of Students: %d%n",
+                collegeName, bestRanking, numberOfStudents);
+                    }
+            } catch (SQLException e) {
+                    // Print any SQL exceptions that occur
+                    e.printStackTrace();
+            }
             }
     }
-
